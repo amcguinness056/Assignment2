@@ -110,22 +110,4 @@ public class NumberGameClient {
         return response;
     }
 
-//    public static void handleResponse(StudentDetailsType sDetails) {
-//        // attempt to read the StudentDetailsType object
-//        if (sDetails != null) {
-//            System.out.println("Server: " + formatStudentDetails(sDetails));
-//        } else {
-//            System.out.println("Server: Invalid Student Number\n");
-//        }
-//    }
-
-//    public static String formatStudentDetails(StudentDetailsType s) {
-//        StringBuilder b = new StringBuilder();
-//        b.append("STUDENT NAME: " + s.getStudentName()+"\n");
-//        b.append(String.format("\tMark1 = " + "%.2f\n", s.getResult1()));
-//        b.append(String.format("\tMark2 = " + "%.2f\n", s.getResult2()));
-//        b.append(String.format("\tMark3 = " + "%.2f\n\n", s.getResult3()));
-//        return b.toString();
-//    }
-
 }

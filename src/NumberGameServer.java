@@ -61,10 +61,10 @@ public class NumberGameServer {
        try{
            while(randomNumber != num){
                if(num > randomNumber){
-                   sendMessageToClient(os, "Lower");
+                   sendMessageToClient(os, "Lower than " + num);
                    numberOfTries++;
                } else{
-                   sendMessageToClient(os, "Higher");
+                   sendMessageToClient(os, "Higher than " + num);
                    numberOfTries++;
                }
                num = Integer.parseInt(is.readLine());
