@@ -1,23 +1,17 @@
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 
 public class NumberGameClient {
-    static int lowerLimit;
-    static int upperLimit;
+    private static int lowerLimit; //global variable for holding lower limit of number range
+    private static int upperLimit; //global variable for holding upper limit of number range
 
     public static void main(String[] args) {
         String hostName = "localhost"; // default host name
         int hostPort = 4444; // default host port
 
 
-        // assign host machine name and port to connect to
+        // assign host machine name and port to connect tos
         if (args.length != 0) {
             if (args[0] != null) {
                 hostName = args[0]; // user specified machine
@@ -39,59 +33,84 @@ public class NumberGameClient {
             // create client input stream
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
+            //Get lower range limit from user
             System.out.print("Enter Lower Limit ");
             lowerLimit = Integer.parseInt(userInput.readLine());
+            //check the number is positive
            while(!checkLimitNumber(lowerLimit)){
                System.out.print("Enter a positive number ");
                lowerLimit = Integer.parseInt(userInput.readLine());
            }
+           //send lowerlimit to server
            sendMessageToServer(os, Integer.toString(lowerLimit));
+           //get upper limit from user
             System.out.print("Enter Upper Limit ");
            upperLimit = Integer.parseInt(userInput.readLine());
+           //check the number is positive
            while (!checkLimitNumber(upperLimit)){
                System.out.print("Enter a positive number ");
                upperLimit = Integer.parseInt(userInput.readLine());
            }
+           //send upperLimit to server
             sendMessageToServer(os, Integer.toString(upperLimit));
 
+           //ask user for their guess
            System.out.println("Enter Guess");
            int clientNumber = Integer.parseInt(userInput.readLine());
+           //check the number guessed is between the limits specified previously before sending to server
            while(!checkUserGuess(clientNumber)){
                System.out.println("Please enter a number between the limits " + lowerLimit + " and " + upperLimit);
                clientNumber = Integer.parseInt(userInput.readLine());
            }
+           //send first guess to server
            sendMessageToServer(os, Integer.toString(clientNumber));
 
+           //loop until guess equals number
             do{
+                //read response froms server
                 String response = is.readObject().toString();
+
+                //if response equals true then guess is correct so exit loop
                 if(response.equals("true")){
                     break;
                 } else{
+                    //print server response
                     System.out.println(response);
+                    //enter next guess
                     int clientGuess = Integer.parseInt(userInput.readLine());
+                    //check if guess is between limits
                     if(!checkUserGuess(clientGuess)){
-                        System.out.println("Please guess a number between the limit " + lowerLimit + " and " + upperLimit);
+                        System.out.println("Please guess a NUMBER between the limit " + lowerLimit + " and " + upperLimit);
                     }
                     else {
+                        //send next guess to server
                         sendMessageToServer(os, Integer.toString(clientGuess));
                     }
                 }
             } while (true);
+            //read response from server
             System.out.println(is.readObject());
-        } catch (Exception e) {
-            System.err.println("Exception:  " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.err.println("Only whole integeres are accepted");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
+    //helper function to send messages to the server
     public static void sendMessageToServer(PrintWriter os, String msg)
     {
         os.println(msg);
         os.flush();
     }
 
+    //checks if limit number is positive
     public static boolean checkLimitNumber(int number){
+        int limit = number;
         boolean response;
-        if(number > 0){
+        if(limit > 0){
             response = true;
         } else {
             response = false;
@@ -99,9 +118,11 @@ public class NumberGameClient {
         return response;
     }
 
+    //checks if users guessed number is between limits
     public static boolean checkUserGuess(int number){
+        int guess = number;
         boolean response;
-        if(number < lowerLimit || number > upperLimit ){
+        if(guess < lowerLimit || guess > upperLimit ){
             response = false;
         }
         else{
@@ -109,5 +130,14 @@ public class NumberGameClient {
         }
         return response;
     }
+
+//    public static boolean isNumeric(String number){
+//        try{
+//            Integer.parseInt(number);
+//            return true;
+//        }catch (NumberFormatException e){
+//            return false;
+//        }
+//    }
 
 }

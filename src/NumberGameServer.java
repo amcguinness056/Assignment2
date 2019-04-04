@@ -4,8 +4,8 @@ import java.net.Socket;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NumberGameServer {
-    private static int lowerLimit;
-    private static int upperLimit;
+    private static int lowerLimit; //global variable for holding lower limit of number range
+    private static int upperLimit; //global variable for holding upper limit of number range
     public static void main(String [] args){
         int port = 4444;
         if(args.length == 1){
