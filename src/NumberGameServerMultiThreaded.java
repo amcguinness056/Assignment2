@@ -4,9 +4,6 @@ import java.net.Socket;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NumberGameServerMultiThreaded extends Thread {
-
-    private static int lowerLimit;
-    private static int upperLimit;
     private final Socket clientSocket;
 
     NumberGameServerMultiThreaded(Socket socket){
@@ -20,11 +17,11 @@ public class NumberGameServerMultiThreaded extends Thread {
 
             System.out.println("Client Accepted");
             // send initial prompt to client
-            sendMessageToClient(os, "Server Saying Hello"); // send initial message to client
-            lowerLimit = parseToInt(is.readLine());
-            upperLimit = parseToInt(is.readLine());
+            sendMessageToClient(os, "Server Saying Hello"); // send initial message to client private static int lowerLimit;int upperLimit;
+            int lowerLimit = parseToInt(is.readLine());
+            int upperLimit = parseToInt(is.readLine());
             int clientGuess = parseToInt(is.readLine());
-            int numberOfTries = checkNumber(os,is, clientGuess);
+            int numberOfTries = checkNumber(os,is, clientGuess, lowerLimit, upperLimit);
             sendMessageToClient(os, "true");
             sendMessageToClient(os, "Congrats! You got it! It took you " + numberOfTries + " attempts");
         } catch (Exception e) {
@@ -69,7 +66,7 @@ public class NumberGameServerMultiThreaded extends Thread {
         return clientNumber;
     }
 
-    public static int checkNumber(ObjectOutputStream os,BufferedReader is, int num){
+    public static int checkNumber(ObjectOutputStream os,BufferedReader is, int num, int lowerLimit, int upperLimit){
         int randomNumber = ThreadLocalRandom.current().nextInt(lowerLimit, upperLimit);
         int numberOfTries = 1;
         try{
